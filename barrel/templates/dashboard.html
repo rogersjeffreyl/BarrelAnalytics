@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BarrelAnalytics</title>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src='http://code.jquery.com/jquery-1.8.2.js'></script>
+ <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".clicks-button").click(function() {
+      var link_str = $(this).val();
+      $.ajax({
+         url : "/show_clicks",
+         type : "POST",
+         dataType: "json",
+         data : {
+            link : link_str,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+      },
+      success : function(json) {
+        drawChart(json);
+      },
+      error : function(xhr,errmsg,err) {
+      alert(xhr.status + ": " + xhr.responseText);
+     }
+    });
+     return false;
+   });
+
+    $(".locations-button").click(function() {
+      var link_str = $(this).val();
+      $.ajax({
+         url : "/show_locations",
+         type : "POST",
+         dataType: "json",
+         data : {
+            link : link_str,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+      },
+      success : function(json) {
+        drawLocations(json);
+      },
+      error : function(xhr,errmsg,err) {
+      alert(xhr.status + ": " + xhr.responseText);
+     }
+    });
+     return false;
+  });
+ });
+
+  google.load("visualization", "1", {packages:["corechart"]});
+
+  function drawChart(json_data) {
+    var data = [];
+    data.push(['Hour', 'Clicks', { role: 'style' }]);
+
+    for(var i = 0; i < json_data.data.link_clicks.length; i++) {
+       var date = new Date(json_data.data.link_clicks[i].dt*1000);
+       data.push([date, json_data.data.link_clicks[i].clicks, 'opacity: 0.7; color: orange']);
+    }
+
+    data = google.visualization.arrayToDataTable(data);
+
+    var options = {
+      title: 'Clicks In The Last 24 Hours',
+      hAxis: {title: 'Hour', titleTextStyle: {color: 'black'}},
+    };
+
+    document.getElementById('visual-level').style.border="1px solid gray";
+    var chart = new google.visualization.ColumnChart(document.getElementById('visual-level'));
+    chart.draw(data, options);
+  }
+
+  function drawLocations(json_data) {
+    var data = [];
+    data.push(['Country', 'Clicks', { role: 'style' }]);
+
+    for(var i = 0; i < json_data.data.countries.length && i < 10; i++) {
+       data.push([json_data.data.countries[i].country, json_data.data.countries[i].clicks, 'opacity: 0.7; color: #33CC00']);
+    }
+
+    data = google.visualization.arrayToDataTable(data);
+
+    var options = {
+      title: 'Clicks By Location In Last 24 Hours',
+      hAxis: {title: 'Country', titleTextStyle: {color: 'black'}},
+    };
+
+    document.getElementById('visual-level').style.border="1px solid gray";
+    var chart = new google.visualization.ColumnChart(document.getElementById('visual-level'));
+    chart.draw(data, options);
+  }
+
+
+</script>
+<style type="text/css">
+    .top-level{
+    	margin: 50px;
+    }
+    .form-level {
+        position:relative;
+        top:50px;
+    }
+    .response-level {
+        top:40px;
+        width:500px;
+    }
+    .response-title {
+        font-size:14px;
+    }
+    .response-urls {
+      color:gray;
+    }
+    .response-desc {
+        font-size:13px;
+        font-style:italic;
+    }
+    a:link {
+       font-size:12px;
+       color:gray;
+    }
+    .submit-button {
+        position:relative;
+        top:20px;
+        left:25px;
+        width: 170px;
+    }
+    #brand-0 {
+       font-size:28px;
+       color:gold;
+    }
+    #brand-1 {
+       font-size:20px;
+       color:white;
+    }
+    #no-results {
+       font-size:40px;
+       color:red;
+  }
+  .navbar-links {
+    font-size:15px;
+  }
+  .navbar-right {
+    padding-right:15px;
+  }
+  .show-clicks {
+    float: right;
+  }
+  #visual-level {
+      top:40px;
+      height:500px;
+      width:500px;
+     margin-left:150px;
+      position: fixed;
+  }
+  #chart {
+     top:80px;
+      height:500px;
+      width:500px;
+      margin-left:600px;
+      position: fixed;
+}
+
+text {
+  font: 10px sans-serif;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.label {
+  fill: #777;
+}
+
+.year.label {
+  font: 500 196px "Helvetica Neue";
+  fill: #ddd;
+}
+
+.year.label.active {
+  fill: #aaa;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+  cursor: ew-resize;
+}
+
+</style>
+
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand"><span id="brand-0">Barrel</span><span id="brand-1">Analytics</span></a>
+    </div>
+   {% if user.is_authenticated %}
+     <ul class="nav navbar-nav navbar-right">
+           <li><a href="/logout"><span class="navbar-links">Log Out</span></a></li>
+     </ul>
+     <ul class="nav navbar-nav navbar-right">
+           <li><a href="#"><span class="navbar-links">{{ user.username }}'s Dashboard</span></a></li>
+     </ul>
+   {% else %}
+     <ul class="nav navbar-nav navbar-right">
+           <li><a href="/register"><span class="navbar-links">Register</span></a></li>
+     </ul> 
+     <ul class="nav navbar-nav navbar-right">
+           <li><a href="/login"><span class="navbar-links">Login</span></a></li>
+     </ul>
+  {% endif %}
+  </nav>
+  <div class="top-level">
+    <div  class="col-md-3 response-level">
+      
+      {% if user.is_authenticated %}
+      <input id="user_name" type="hidden" value="{{ user.username }}">
+      {% endif %}
+      
+      {% if has_links %} 
+      {% for link in links_info %}
+      
+      <div class="panel panel-primary">
+        <div class="panel-heading response-title">{{ link.title }}</div>
+        <div class="panel-body">
+          <a href="{{ link.url }}">{{ link.url }}</a><span class="response-desc glyphicon glyphicon-link"></span>
+	  
+	  <div class="show-clicks">
+	    <form method="post"> {% csrf_token %}
+	      <button type="submit" class="btn btn-default clicks-button"  value="{{ link.url }}"><label class="glyphicon glyphicon-hand-right"></label> Clicks </button>
+	      <button type="submit" class="btn btn-default locations-button"  value="{{ link.url }}"><label class="glyphicon glyphicon-globe"></label>Locations</button>
+	    </form>
+	  </div>
+	  
+        </div>
+      </div>
+      {% endfor %}
+
+      {% else %}
+      <div id="no-results">You have no links in your portfolio.</div>
+      {% endif %}
+    </div>
+       <div  class="col-md-3" id="visual-level">
+       <p id="chart" class="col-md-3"></p>
+       </div>
+  </div>
+   <div id="result">
+  </div>
+</body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+// Various accessors that specify the four dimensions of data to visualize.
+function x(d) { return d.income; }
+function y(d) { return d.lifeExpectancy; }
+function radius(d) { return d.population; }
+function color(d) { return d.region; }
+function key(d) { return d.name; }
+
+// Chart dimensions.
+var margin = {top: 21.5, right: 19.5, bottom: 19.5, left: 39.5},
+    width = 600 - margin.right,
+    height = 300 - margin.top - margin.bottom;
+
+// Various scales. These domains make assumptions of data, naturally.
+var xScale = d3.scale.log().domain([300, 1e5]).range([0, width]),
+    yScale = d3.scale.linear().domain([10, 85]).range([height, 0]),
+    radiusScale = d3.scale.sqrt().domain([0, 5e8]).range([0, 40]),
+    colorScale = d3.scale.category10();
+
+// The x & y axes.
+var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(12, d3.format(",d")),
+    yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+// Create the SVG container and set the origin.
+var svg = d3.select("#chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// Add the x-axis.
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+// Add the y-axis.
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+// Add an x-axis label.
+svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height - 6)
+    .text("income per capita, inflation-adjusted (dollars)");
+
+// Add a y-axis label.
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("life expectancy (years)");
+
+// Add the year label; the value is set on transition.
+var label = svg.append("text")
+    .attr("class", "year label")
+    .attr("text-anchor", "end")
+    .attr("y", height - 24)
+    .attr("x", width)
+    .text(1800);
+
+// Load the data.
+d3.xhr("http://0.0.0.0:8080/nations.json", function(nations) {
+//d3.json("nations.json", function(nations) {
+
+nations=JSON.parse(nations.responseText);
+//alert(nations);
+  // A bisector since many nation's data is sparsely-defined.
+  var bisect = d3.bisector(function(d) { return d[0]; });
+
+  // Add a dot per nation. Initialize the data at 1800, and set the colors.
+  var dot = svg.append("g")
+      .attr("class", "dots")
+    .selectAll(".dot")
+      .data(interpolateData(1800))
+    .enter().append("circle")
+      .attr("class", "dot")
+      .style("fill", function(d) { return colorScale(color(d)); })
+      .call(position)
+      .sort(order);
+
+  // Add a title.
+  dot.append("title")
+      .text(function(d) { return d.name; });
+
+  // Add an overlay for the year label.
+  var box = label.node().getBBox();
+
+  var overlay = svg.append("rect")
+        .attr("class", "overlay")
+        .attr("x", box.x)
+        .attr("y", box.y)
+        .attr("width", box.width)
+        .attr("height", box.height)
+        .on("mouseover", enableInteraction);
+
+  // Start a transition that interpolates the data based on year.
+  svg.transition()
+      .duration(30000)
+      .ease("linear")
+      .tween("year", tweenYear)
+      .each("end", enableInteraction);
+
+  // Positions the dots based on data.
+  function position(dot) {
+    dot .attr("cx", function(d) { return xScale(x(d)); })
+        .attr("cy", function(d) { return yScale(y(d)); })
+        .attr("r", function(d) { return radiusScale(radius(d)); });
+  }
+
+  // Defines a sort order so that the smallest dots are drawn on top.
+  function order(a, b) {
+    return radius(b) - radius(a);
+  }
+
+  // After the transition finishes, you can mouseover to change the year.
+  function enableInteraction() {
+    var yearScale = d3.scale.linear()
+        .domain([1800, 2009])
+        .range([box.x + 10, box.x + box.width - 10])
+        .clamp(true);
+
+    // Cancel the current transition, if any.
+    svg.transition().duration(0);
+
+    overlay
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout)
+        .on("mousemove", mousemove)
+        .on("touchmove", mousemove);
+
+    function mouseover() {
+      label.classed("active", true);
+    }
+
+    function mouseout() {
+      label.classed("active", false);
+    }
+
+    function mousemove() {
+      displayYear(yearScale.invert(d3.mouse(this)[0]));
+    }
+  }
+
+  // Tweens the entire chart by first tweening the year, and then the data.
+  // For the interpolated data, the dots and label are redrawn.
+  function tweenYear() {
+    var year = d3.interpolateNumber(1800, 2009);
+    return function(t) { displayYear(year(t)); };
+  }
+
+  // Updates the display to show the specified year.
+  function displayYear(year) {
+    dot.data(interpolateData(year), key).call(position).sort(order);
+    label.text(Math.round(year));
+  }
+
+  // Interpolates the dataset for the given (fractional) year.
+  function interpolateData(year) {
+    return nations.map(function(d) {
+      return {
+        name: d.name,
+        region: d.region,
+        income: interpolateValues(d.income, year),
+        population: interpolateValues(d.population, year),
+        lifeExpectancy: interpolateValues(d.lifeExpectancy, year)
+      };
+    });
+  }
+
+  // Finds (and possibly interpolates) the value for the specified year.
+  function interpolateValues(values, year) {
+    var i = bisect.left(values, year, 0, values.length - 1),
+        a = values[i];
+    if (i > 0) {
+      var b = values[i - 1],
+          t = (year - a[0]) / (b[0] - a[0]);
+      return a[1] * (1 - t) + b[1] * t;
+    }
+    return a[1];
+  }
+});
+
+</script>
+</html>                                		
+

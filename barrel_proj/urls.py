@@ -8,6 +8,13 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'barrel.views.home'),
     url(r'^search/?', 'barrel.views.search'),
+    url(r'^save_link/?', 'barrel.views.save_link'),
+    url(r'^register/?', 'barrel.views.register'),
+    url(r'^dashboard/?', 'barrel.views.dashboard'),
+    url(r'^show_clicks/?', 'barrel.views.show_clicks'),
+    url(r'^show_locations/?', 'barrel.views.show_locations'),
+    url(r'^login/?', 'barrel.views.user_login'),
+    url(r'^logout/?', 'barrel.views.user_logout'),
     # url(r'^$', 'mysite.views.home', name='home'),
     # url(r'^mysite/', include('mysite.foo.urls')),
 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BarrelAnalytics</title>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script> 
+<style type="text/css">
+    .bs-example{
+    	margin: 20px;
+    }
+    .form-control {
+      width: 250px;
+    }
+    #login-form {
+     position: relative;
+     top:100px;
+    }   
+    #brand-0 {
+       font-size:28px;
+       color:gold;
+    }
+    #brand-1 {
+       font-size:20px;
+       color:white;
+    }
+</style>
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand"><span id="brand-0">Barrel</span><span id="brand-1">Analytics</span></a>
+    </div>
+  </nav>
+<div id="login-form">
+     <form class="form-horizontal" id="login_form" method="post" action="/register"> {% csrf_token %}
+        <div class="form-group">
+            <label for="inputUsername" class="control-label col-xs-2">Username</label>
+            <div class="col-xs-10">
+                <input type="username" class="form-control" id="inputUsername" name="username" placeholder="Username">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword" class="control-label col-xs-2">Password</label>
+            <div class="col-xs-10">
+                <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-offset-2 col-xs-10">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>      
+

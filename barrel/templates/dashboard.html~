@@ -12,16 +12,14 @@
   $(document).ready(function() {
     $(".save-button").click(function() {
       var link_str = $(this).val();
-      var title_str = $(this).next().val();
       var user_name_str = $("#user_name").val();
       $.ajax({
          url : "/save_link",
          type : "POST",
          dataType: "json",
          data : {
-            new_link : link_str,
-            title : title_str,
-            user_name: user_name_str,
+            new_link : link_str
+,           user_name: user_name_str,
             csrfmiddlewaretoken: "{{ csrf_token }}"
       },
       success : function(json) {
@@ -111,9 +109,6 @@
      <ul class="nav navbar-nav navbar-right">
            <li><a href="/logout"><span class="navbar-links">Log Out</span></a></li>
      </ul>
-     <ul class="nav navbar-nav navbar-right">
-           <li><a href="/dashboard?user_name={{user.username }}"><span class="navbar-links">{{ user.username }}'s Dashboard</span></a></li>
-     </ul>
    {% else %}
      <ul class="nav navbar-nav navbar-right">
            <li><a href="/register"><span class="navbar-links">Register</span></a></li>
@@ -162,7 +157,6 @@
       <div class="save-link-button">
 	<form method="post">
 	  <button type="submit" class="btn btn-default save-button"  value="{{ res.aggregate_link }}"><label class="glyphicon glyphicon-save"></label> Save</button>
-	  <input type="hidden" value="{{ res.title }}">
 	</form>
       </div>
  
@@ -190,6 +184,8 @@
          </marquee>
      </div>
   </div>
+<div id="result">
+</div>
 </body>
 </html>                                		
 
