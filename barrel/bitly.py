@@ -12,7 +12,7 @@ def search(args):
     data['access_token'] = access_token
     data['query'] = args['query']
     data['cities'] = args['location']
-    data['fields'] = 'title,description,aggregate_link'
+    data['fields'] = 'title,description,aggregate_link,last_indexed_epoch'  #Change made here ROHAN
     data['limit'] = 10
     
     get_params = urllib.urlencode(data)
