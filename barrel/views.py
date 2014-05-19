@@ -101,7 +101,14 @@ def show_locations(request):
 
     return HttpResponse(json.dumps(c), mimetype='application/javascript')
             
+def show_referrers(request):
+    args= {'url':request.POST['link']}
+    print args
+    c = bitly.referrers(args)
 
+    print c
+
+    return HttpResponse(json.dumps(c),mimetype='application/javascript')
 
 def register(request):
     registered = False
