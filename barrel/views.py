@@ -37,10 +37,11 @@ def search(request):
     return render_to_response('index.html', c, context_instance=RequestContext(request))
 
 def save_link(request):
-    buser = BUser.objects.get(buser_name = request.POST['user_name'])
+    buser1 = BUser.objects.get(buser_name = request.POST['user_name'])
 
-    link = Link(buser = buser, url =  request.POST['new_link'], title = request.POST['title'])
-    link.save();
+    link = Link( url =  request.POST['new_link'], title = request.POST['title'])
+    link.save()
+    link.buser.add(buser1);
 
     all_buser_entries = BUser.objects.all()
     all_link_entries = Link.objects.all()
@@ -50,9 +51,24 @@ def save_link(request):
     return HttpResponse(json.dumps(c), mimetype='application/javascript')
     #return render_to_response('index.html', context_instance=RequestContext(request))
 
+def rm_link(request):
+    print request.POST['link']
+    buser = BUser.objects.get(buser_name = request.POST['user_name'])
+
+    #link = Link(buser = buser, url =  request.POST['link'], title = request.POST['link'])
+
+    link=Link.objects.filter(buser__buser_name=request.POST['user_name'],url=request.POST['link'])
+    link.delete()
+    all_buser_entries = BUser.objects.all()
+    all_link_entries = Link.objects.all()
+    print all_link_entries
+    c = {'success': 1}
+
+    return HttpResponse(json.dumps(c), mimetype='application/javascript')
+
 def dashboard(request):
     buser = BUser.objects.get(buser_name = request.GET['user_name'])
-    all_links = Link.objects.filter(buser = buser)
+    all_links = Link.objects.filter(buser__buser_name = buser,)
 
     links_info = []
 
@@ -78,7 +94,7 @@ def show_clicks(request):
 
 def show_locations(request):
     args = {'url' : request.POST['link']}
-
+    print args
     c = bitly.locations(args)
 
     print c

@@ -40,14 +40,14 @@ def burst():
 
 
 def clicks(args):
-    
+
     data = {}
 
     data['access_token'] = access_token
     data['link'] = args['url']
     data['rollup'] = 'false'
     data['unit'] = 'hour'
-    data['units'] = 24    
+    data['units'] = 24
 
     get_params = urllib.urlencode(data)
 

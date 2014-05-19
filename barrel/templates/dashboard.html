@@ -12,7 +12,8 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $(".clicks-button").click(function() {
-      var link_str = $(this).val();
+
+        var link_str = $(this).val();
       $.ajax({
          url : "/show_clicks",
          type : "POST",
@@ -33,12 +34,14 @@
 
     $(".locations-button").click(function() {
       var link_str = $(this).val();
+
       $.ajax({
          url : "/show_locations",
          type : "POST",
          dataType: "json",
          data : {
             link : link_str,
+
             csrfmiddlewaretoken: "{{ csrf_token }}"
       },
       success : function(json) {
@@ -67,11 +70,13 @@
 
     var options = {
       title: 'Clicks In The Last 24 Hours',
-      hAxis: {title: 'Hour', titleTextStyle: {color: 'black'}},
+      hAxis: {title: 'Hour', titleTextStyle: {color: 'black'}}
     };
 
-    document.getElementById('visual-level').style.border="1px solid gray";
-    var chart = new google.visualization.ColumnChart(document.getElementById('visual-level'));
+    document.getElementById('chart').setAttribute('class','visual-level');
+    document.getElementById('chart').style.border="1px solid gray";
+
+    var chart = new google.visualization.AreaChart(document.getElementById('chart'));
     chart.draw(data, options);
   }
 
@@ -87,14 +92,38 @@
 
     var options = {
       title: 'Clicks By Location In Last 24 Hours',
-      hAxis: {title: 'Country', titleTextStyle: {color: 'black'}},
+      hAxis: {title: 'Country', titleTextStyle: {color: 'black'}}
     };
 
-    document.getElementById('visual-level').style.border="1px solid gray";
-    var chart = new google.visualization.ColumnChart(document.getElementById('visual-level'));
+    document.getElementById('chart').setAttribute('class','visual-level');
+    document.getElementById('chart').style.border="1px solid gray";
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
     chart.draw(data, options);
   }
 
+   function RemoveFromPortfolio(link)
+   {
+       document.getElementById(link).remove();
+       var user_name_str = $("#user_name").val();
+         $.ajax({
+         url : "/rm_link",
+         type : "POST",
+         dataType: "json",
+         data : {
+            link : link,
+             user_name: user_name_str,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+      },
+      success : function(json) {
+        alert(json);
+      },
+      error : function(xhr,errmsg,err) {
+      alert(xhr.status + ": " + xhr.responseText);
+     }
+    });
+
+   }
 
 </script>
 <style type="text/css">
@@ -150,20 +179,20 @@
   .show-clicks {
     float: right;
   }
-  #visual-level {
-      top:40px;
-      height:500px;
+  .visual-level {
+      top:100px;
+      height:300px;
       width:500px;
-     margin-left:150px;
+     margin-left:500px;
       position: fixed;
   }
-  #chart {
+  .chart {
      top:80px;
-      height:500px;
+      height:600px;
       width:500px;
       margin-left:600px;
       position: fixed;
-}
+   }
 
 text {
   font: 10px sans-serif;
@@ -197,6 +226,87 @@ text {
   pointer-events: all;
   cursor: ew-resize;
 }
+
+.infoBox {
+	border: 1px solid #cccccc;
+	box-shadow: 4px 3px #cccccc;
+	-moz-box-shadow: 4px 3px #cccccc;
+	-webkit-box-shadow: 4px 3px #cccccc;
+	margin-top: 45px;
+}
+    .infoBox h4 {
+	color: #8888888;
+	font-size: 11px;
+	line-height: 11px;
+	margin: -10px 0 0 20px;
+	float: left;
+	text-transform: uppercase;
+	padding: 4px 3px 3px 3px;
+	background-color: #ffffff;
+	border: 1px solid #eeeeee;
+	box-shadow: 2px 2px #e6e6e6;
+	-moz-box-shadow: 2px 2px #e6e6e6;
+	-webkit-box-shadow: 2px 2px #e6e6e6;
+}
+.overlay{
+    background: black;
+    opacity: .5;
+    position:fixed;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    z-index:100;
+}
+.box{
+    position:fixed;
+    top:100px;
+    left:30%;
+    right:30%;
+    background-color:#fff;
+    color:#7F7F7F;
+    padding:20px;
+    border:2px solid #ccc;
+    -moz-border-radius: 20px;
+    -webkit-border-radius:20px;
+    -khtml-border-radius:20px;
+    -moz-box-shadow: 0 1px 5px #333;
+    -webkit-box-shadow: 0 1px 5px #333;
+    z-index:101;
+}
+a.boxclose{
+    float:right;
+    margin-top:10px;
+    margin-right:10px;
+    cursor:pointer;
+    color: #fff;
+    #border: 1px solid #AEAEAE;
+    #border-radius: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    display: inline-block;
+    line-height: 0px;
+    padding: 11px 3px;
+}
+
+.boxclose:before {
+    content: "×";
+
+}
+
+.box h1{
+    border-bottom: 1px dashed #7F7F7F;
+    margin:-20px -20px 0px -20px;
+    padding:10px;
+    background-color:#FFEFEF;
+    color:#EF7777;
+    -moz-border-radius:20px 20px 0px 0px;
+    -webkit-border-top-left-radius: 20px;
+    -webkit-border-top-right-radius: 20px;
+    -khtml-border-top-left-radius: 20px;
+    -khtml-border-top-right-radius: 20px;
+}
+
 
 </style>
 
@@ -232,13 +342,18 @@ text {
       {% if has_links %} 
       {% for link in links_info %}
       
-      <div class="panel panel-primary">
+      <div class="panel panel-primary" id="{{ link.url }}">
+
+         <a class="boxclose" value="{{ link.url }}" onclick='RemoveFromPortfolio("{{ link.url }}")'></a>
+
         <div class="panel-heading response-title">{{ link.title }}</div>
         <div class="panel-body">
           <a href="{{ link.url }}">{{ link.url }}</a><span class="response-desc glyphicon glyphicon-link"></span>
 	  
 	  <div class="show-clicks">
-	    <form method="post"> {% csrf_token %}
+
+
+         <form method="post"> {% csrf_token %}
 	      <button type="submit" class="btn btn-default clicks-button"  value="{{ link.url }}"><label class="glyphicon glyphicon-hand-right"></label> Clicks </button>
 	      <button type="submit" class="btn btn-default locations-button"  value="{{ link.url }}"><label class="glyphicon glyphicon-globe"></label>Locations</button>
 	    </form>
@@ -248,13 +363,13 @@ text {
       </div>
       {% endfor %}
 
+
+      <div id="chart" class='chart infobox'></div>
+      </div>
       {% else %}
       <div id="no-results">You have no links in your portfolio.</div>
       {% endif %}
     </div>
-       <div  class="col-md-3" id="visual-level">
-       <p id="chart" class="col-md-3"></p>
-       </div>
   </div>
    <div id="result">
   </div>
@@ -448,6 +563,16 @@ nations=JSON.parse(nations.responseText);
     return a[1];
   }
 });
+
+
+
+
+
+
+
+
+
+
 
 </script>
 </html>                                		
