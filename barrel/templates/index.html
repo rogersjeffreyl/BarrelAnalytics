@@ -36,6 +36,15 @@
    });
   });
 </script>
+<script>
+
+function test(e){
+    console.log("HELLO");
+    document.getElementById("phrase_id").value=e
+    document.search_form.submit()
+}
+
+</script>
 <style type="text/css">
     .top-level{
     	margin: 50px;
@@ -127,11 +136,11 @@
   </nav>
   <div class="top-level">
     <div class="form-level col-md-3">
-      <form action="/search" method="post">{% csrf_token %}
+      <form name="search_form" action="/search" method="post">{% csrf_token %}
 	<div class="input-group">
 	  <label  class="control-label col-xs-2 glyphicon glyphicon-search"></label>
 	  <div class="col-xs-10">
-          <input type="text" name="query" class="form-input form-control" placeholder="Phrase, eg Barack Obama">
+          <input id="phrase_id" type="text" name="query" class="form-input form-control" placeholder="Phrase, eg Barack Obama">
 	  </div>
 	</div>
 	<br>
@@ -139,14 +148,14 @@
 	<div class="input-group">
           <label class="control-label col-xs-2 glyphicon glyphicon-globe"></label>
 	  <div class="col-xs-10">
-	    <input type="text" name="location" class="form-input form-control" placeholder="location, country or city">
+	    <input id="location_id" type="text" name="location" class="form-input form-control" placeholder="location, country or city">
 	  </div>
 	</div>
 	<br>
 	
 	<div class="input-group">
 	  <div class="col-xs-10">
-	    <button type="submit" class="submit-button btn btn-primary"><label class="glyphicon glyphicon-search"></label> Search</button>
+	    <button id="submitbutton_id" type="submit" class="submit-button btn btn-primary"><label class="glyphicon glyphicon-search"></label> Search</button>
 	  </div>
 	</div>
       </form>
@@ -194,11 +203,12 @@
          <span class="glyphicon glyphicon-fire"></span><span id="ticker-title"><b>Burst Feed</b></span>
 	 <marquee behavior="scroll" align="center" direction="down" scrollamount="2" scrolldelay="5" onmouseover="this.stop()" onmouseout="this.start()" height="300px" width="200px" bgcolor="#c0c0c0" style="border:1px solid #009900">
 	   {% for res in response_burst.data.phrases %}
-           {{ res.phrase }}<br><br>
+           <span class="response-urls"><a href="#" class="phrase" value={{ res.phrase }} onclick='test("{{ res.phrase}}")'>{{ res.phrase }}</a></span><br><br>
 	   {% endfor %}
          </marquee>
      </div>
   </div>
+
 </body>
 </html>                                		
 

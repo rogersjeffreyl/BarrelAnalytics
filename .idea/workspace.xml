@@ -29,7 +29,7 @@
       <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/barrel_proj/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="15" selection-start="206" selection-end="206" vertical-scroll-proportion="-1.76" vertical-offset="61" max-vertical-offset="480">
+            <state line="7" column="15" selection-start="206" selection-end="206" vertical-scroll-proportion="-0.76" vertical-offset="86" max-vertical-offset="480">
               <folding />
             </state>
           </provider>
@@ -49,7 +49,7 @@
       <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/barrel/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="45" selection-start="800" selection-end="810" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="2250">
+            <state line="23" column="30" selection-start="688" selection-end="688" vertical-scroll-proportion="-0.0" vertical-offset="225" max-vertical-offset="2130">
               <folding />
             </state>
           </provider>
@@ -58,7 +58,7 @@
       <file leaf-file-name="bitly.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/barrel/bitly.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="55" selection-start="316" selection-end="334" vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="1215">
+            <state line="14" column="55" selection-start="316" selection-end="334" vertical-scroll-proportion="1.8" vertical-offset="210" max-vertical-offset="1170">
               <folding />
             </state>
           </provider>
@@ -67,8 +67,10 @@
       <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/barrel/templates/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="196" column="27" selection-start="6162" selection-end="6162" vertical-scroll-proportion="0.45026177" vertical-offset="2768" max-vertical-offset="3150">
-              <folding />
+            <state line="43" column="4" selection-start="1446" selection-end="1446" vertical-scroll-proportion="0.62624586" vertical-offset="268" max-vertical-offset="3300">
+              <folding>
+                <element signature="n#style#0;n#marquee#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -136,6 +138,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="BarrelAnalytics" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="BarrelAnalytics" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="BarrelAnalytics" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="barrel_proj" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -443,7 +459,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32884902" sideWeight="0.50038433" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32884902" sideWeight="0.49961567" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32884902" sideWeight="0.49961567" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -495,7 +511,9 @@
     <entry file="file://$PROJECT_DIR$/barrel/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="7" selection-start="601" selection-end="601" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="3135">
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#marquee#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -523,28 +541,9 @@
     <entry file="file://$PROJECT_DIR$/barrel/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="7" selection-start="601" selection-end="601" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="3135">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/barrel/bitly.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="55" selection-start="316" selection-end="334" vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="1215">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/barrel/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="45" selection-start="800" selection-end="810" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="2250">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/barrel_proj/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="15" selection-start="206" selection-end="206" vertical-scroll-proportion="-1.76" vertical-offset="61" max-vertical-offset="480">
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#marquee#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -557,10 +556,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/barrel_proj/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="15" selection-start="206" selection-end="206" vertical-scroll-proportion="-0.76" vertical-offset="86" max-vertical-offset="480">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/barrel/bitly.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="55" selection-start="316" selection-end="334" vertical-scroll-proportion="1.8" vertical-offset="210" max-vertical-offset="1170">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/barrel/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="30" selection-start="688" selection-end="688" vertical-scroll-proportion="-0.0" vertical-offset="225" max-vertical-offset="2130">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/barrel/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="196" column="27" selection-start="6162" selection-end="6162" vertical-scroll-proportion="0.45026177" vertical-offset="2768" max-vertical-offset="3150">
-          <folding />
+        <state line="43" column="4" selection-start="1446" selection-end="1446" vertical-scroll-proportion="0.62624586" vertical-offset="268" max-vertical-offset="3300">
+          <folding>
+            <element signature="n#style#0;n#marquee#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
