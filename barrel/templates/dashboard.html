@@ -117,7 +117,6 @@
             }
         }
 
-
         data.push([text,json_data.data.referrers[i].clicks,'opacity:0.7;color: orange'])
     }
 
@@ -136,25 +135,25 @@
       var chart = new google.visualization.PieChart(document.getElementById('chart'));
       chart.draw(data,options);
   }
+  google.load('visualization', '1', {'packages': ['geochart']});
+  google.setOnLoadCallback(drawLocations)
+
   function drawLocations(json_data) {
     var data = [];
-    data.push(['Country', 'Clicks', { role: 'style' }]);
+    data.push(['Country', 'Clicks']);
 
     for(var i = 0; i < json_data.data.countries.length && i < 10; i++) {
-       data.push([json_data.data.countries[i].country, json_data.data.countries[i].clicks, 'opacity: 0.7; color: #33CC00']);
+       data.push([json_data.data.countries[i].country, json_data.data.countries[i].clicks]);
     }
 
     data = google.visualization.arrayToDataTable(data);
 
-    var options = {
-      title: 'Clicks By Location In Last 24 Hours',
-      hAxis: {title: 'Country', titleTextStyle: {color: 'black'}}
-    };
+    var options = {    };
 
     document.getElementById('chart').setAttribute('class','visual-level');
     document.getElementById('chart').style.border="1px solid gray";
 
-    var chart = new google.visualization.ColumnChart(document.getElementById('chart'));
+    var chart = new google.visualization.GeoChart(document.getElementById('chart'));
     chart.draw(data, options);
   }
 
@@ -500,7 +499,7 @@ var label = svg.append("text")
     .text(1800);
 
 // Load the data.
-d3.xhr("http://0.0.0.0:8080/nations.json", function(nations) {
+d3.xhr("http://0.0.0.0:8000/nations.json", function(nations) {
 //d3.json("nations.json", function(nations) {
 
 nations=JSON.parse(nations.responseText);
