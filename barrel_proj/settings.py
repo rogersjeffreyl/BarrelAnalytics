@@ -11,7 +11,11 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
+RDS_DB_NAME="db"
+RDS_USERNAME="barrel"
+RDS_PASSWORD="finalcloud"
+RDS_HOSTNAME="db.c6ezltop5omd.us-west-1.rds.amazonaws.com"
+RDS_HOSTNAME=3306
 DATABASES = {}
 
 if 'RDS_DB_NAME' in os.environ:
