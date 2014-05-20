@@ -11,16 +11,81 @@
 <script type="text/javascript">
       var moveLeft = 0;
       var moveDown = 0;
+      function display_popup(id)
+      {
+
+          $.ajax({
+                url : "/show_clicks_true",
+                type : "POST",
+                dataType: "json",
+                data : {
+                    link : id,
+                    csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success : function(json) {
+              var clicks = json.data.link_clicks
+                $('#pop1 table tbody tr:first-child td:first-child').html(clicks)
+
+             //$("#result").append( "Server Response: " + json.server_response);
+             },
+             error : function(xhr,errmsg,err) {
+             alert(xhr.status + ": " + xhr.responseText);
+            }
+        });
+          $.ajax({
+              url :"/show_locations",
+              type : "POST",
+              dataType:"json",
+              data: {
+                  link: id,
+                  csrfmiddlewaretoken: "{{ csrf_token }}"
+              },
+              success: function(json){
+                  var countries = json.data.countries[0].country
+
+                  $('#pop1 table tbody tr:first-child td:first-child + td').html(countries)
+              },
+              error: function(xhr,errmsg,err){
+                  alert(xhr.status+": "+xhr.responseText);
+              }
+          });
+          $.ajax({
+              url :"/show_referrers",
+              type: "POST",
+              dataType: "json",
+              data: {
+                  link: id,
+                  csrfmiddlewaretoken: "{{ csrf_token }}"
+              },
+              success: function(json){
+                  var ref = json.data.referrers[0].referrer
+
+                  $('#pop1 table tbody tr:first-child td:first-child + td + td').html(ref)
+              },
+              error: function(xhr,errmsg,err){
+                  alert(xhr.status+": "+xhr.responseText);
+              }
+          });
+          var target = '#' + ($(this).attr('data-popbox'));
+          $(target).show();
+
+            var target = '#' + ($(this).attr('data-popbox'));
+            if (!($("a.popper").hasClass("show"))) {
+              $(target).hide();
+            }
+      }
       $(document).ready(function(){
-        
+
         $(".popper").hover(function(){
 
           var target = '#' + ($(this).attr('data-popbox'));
+
           $(target).show();
           moveLeft = $(this).outerWidth();
           moveDown = ($(target).outerHeight() / 2);
           //$("p").css("background-color","yellow");
 
+            return false;
 
           },function(){
             var target = '#' + ($(this).attr('data-popbox'));
@@ -29,7 +94,7 @@
             }
           //$("p").css("background-color","pink");
         });
-        $(".popper").mousemove(function (e) {
+    $(".popper").mouseover(function (e) {
             var target = '#' + ($(this).attr('data-popbox'));
 
             leftD = e.pageX + parseInt(moveLeft);
@@ -262,6 +327,7 @@ function test(e){
 
       <div class="panel panel-primary">
         <div class="panel-heading response-title">
+            <p class="popper" id="{{ res.aggregate_link }}" data-popbox="pop1" onmouseover="display_popup('{{ res.aggregate_link }}')"> {{ res.title }} </p>
             <div id="pop1" class="popbox">
               <table class="table table-striped">
                     <thead>
@@ -274,14 +340,13 @@ function test(e){
                     <tbody>
                       <!-- TODO: fill table correctly -->
                       <tr>
-                        <td>1,450</td>
-                        <td>US</td>
-                        <td>Twitter</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                       </tr>
                     </tbody>
                   </table>
             </div>
-            <p class="popper" data-popbox="pop1"> {{ res.title }} </p>
           </div>
         <div class="panel-body">
 	  <span class="response-urls"><a href="{{ res.aggregate_link }}" >{{ res.aggregate_link }}</a></span><span class="glyphicon glyphicon-link"></span><br><br>

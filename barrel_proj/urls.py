@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     url(r'^login/?', 'barrel.views.user_login'),
     url(r'^logout/?', 'barrel.views.user_logout'),
     url(r'^show_referrers/?','barrel.views.show_referrers'),
+    url(r'^show_clicks_true/?','barrel.views.')
     # url(r'^$', 'mysite.views.home', name='home'),
     # url(r'^mysite/', include('mysite.foo.urls')),
 

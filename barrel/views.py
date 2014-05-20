@@ -91,6 +91,14 @@ def show_clicks(request):
 
     return HttpResponse(json.dumps(c), mimetype='application/javascript')
 
+def show_clicks(request):
+    args = {'url' : request.POST['link']}
+
+    c=bitly.clicks_true(args)
+
+    print c
+
+    return HttpResponse(json.dumps(c), mimetype='application/javascript')
 
 def show_locations(request):
     args = {'url' : request.POST['link']}

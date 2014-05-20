@@ -57,6 +57,25 @@ def clicks(args):
 
     return data
 
+def clicks_true(args):
+
+    data = {}
+
+    data['access_token']=access_token
+    data['link'] = args['url']
+    data['rollup'] = 'true'
+    data['unit'] = 'hour'
+    data['units'] = 24
+
+    get_params = urllib.urlencode(data)
+
+    endpoint = 'https://api-ssl.bitly.com/v3/link/clicks' + '?' + get_params
+    response = urllib2.urlopen(endpoint)
+    data = json.load(response)
+
+    return data
+
+
 
 def locations(args):
     
