@@ -641,7 +641,7 @@ var label = svg.append("text")
 
 //d3.xhr.header('user_name',$("#user_name").val())
 var user_name=$("#user_name").val()
-var url="http://0.0.0.0:8000/profile_trend?user_name="+user_name
+var url="/profile_trend?user_name="+user_name
 d3.xhr(url, function(nations) {
 //d3.xhr("http://0.0.0.0:8080/nations.json", function(nations) {
 
