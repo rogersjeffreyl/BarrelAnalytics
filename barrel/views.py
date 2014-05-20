@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 import bitly
 import json
-
+from random import  randint
 def home(request):
 
     response_burst = bitly.burst()
@@ -194,3 +194,5 @@ def get_profile_trend(request):
         total_data.append(per_link_data)
     print total_data
     return HttpResponse(json.dumps(total_data), mimetype='application/javascript')
+
+
