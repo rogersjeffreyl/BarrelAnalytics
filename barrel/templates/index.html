@@ -118,7 +118,7 @@
                 topD = windowTop + 20;
             }
 
-            $(target).css('top', topD).css('left', (maxLeft+maxRight)/4);
+            $(target).css('top', topD).css('left', (maxLeft+maxRight)/4 + 100);
         });
         $(".popper").click(function (e) {
             var target = '#' + ($(this).attr('data-popbox'));
