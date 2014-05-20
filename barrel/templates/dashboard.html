@@ -116,7 +116,7 @@
             csrfmiddlewaretoken: "{{ csrf_token }}"
       },
       success : function(json) {
-        alert(json);
+
       },
       error : function(xhr,errmsg,err) {
       alert(xhr.status + ": " + xhr.responseText);
@@ -126,6 +126,15 @@
    }
 
 </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script>
+  $(function() {
+    $( "#tabs" ).tabs();
+  });
+  </script>
 <style type="text/css">
     .top-level{
     	margin: 50px;
@@ -355,7 +364,7 @@ a.boxclose{
 
          <form method="post"> {% csrf_token %}
 	      <button type="submit" class="btn btn-default clicks-button"  value="{{ link.url }}"><label class="glyphicon glyphicon-hand-right"></label> Clicks </button>
-	      <button type="submit" class="btn btn-default locations-button"  value="{{ link.url }}"><label class="glyphicon glyphicon-globe"></label>Locations</button>
+	      <a  class="btn btn-default more-button"  href="/" value="{{ link.url }}"><label class="glyphicon glyphicon-globe"></label>More Info</a>
 	    </form>
 	  </div>
 	  
@@ -373,6 +382,7 @@ a.boxclose{
   </div>
    <div id="result">
   </div>
+
 </body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
@@ -390,9 +400,10 @@ var margin = {top: 21.5, right: 19.5, bottom: 19.5, left: 39.5},
     height = 300 - margin.top - margin.bottom;
 
 // Various scales. These domains make assumptions of data, naturally.
-var xScale = d3.scale.log().domain([300, 1e5]).range([0, width]),
-    yScale = d3.scale.linear().domain([10, 85]).range([height, 0]),
-    radiusScale = d3.scale.sqrt().domain([0, 5e8]).range([0, 40]),
+    console.log(width);
+    var xScale = d3.scale.linear().domain([0, 1000]).range([0,1000 ]),
+    yScale = d3.scale.linear().domain([0, 1000]).range([height, 0]),
+    radiusScale = d3.scale.linear().domain([0,1000]).range([0,150]),
     colorScale = d3.scale.category10();
 
 // The x & y axes.
@@ -423,7 +434,7 @@ svg.append("text")
     .attr("text-anchor", "end")
     .attr("x", width)
     .attr("y", height - 6)
-    .text("income per capita, inflation-adjusted (dollars)");
+    .text("click-rate");
 
 // Add a y-axis label.
 svg.append("text")
@@ -432,7 +443,7 @@ svg.append("text")
     .attr("y", 6)
     .attr("dy", ".75em")
     .attr("transform", "rotate(-90)")
-    .text("life expectancy (years)");
+    .text("socialscore");
 
 // Add the year label; the value is set on transition.
 var label = svg.append("text")
@@ -440,10 +451,14 @@ var label = svg.append("text")
     .attr("text-anchor", "end")
     .attr("y", height - 24)
     .attr("x", width)
-    .text(1800);
+    .text(0);
 
 // Load the data.
-d3.xhr("http://0.0.0.0:8080/nations.json", function(nations) {
+
+//d3.xhr.header('user_name',$("#user_name").val())
+var user_name=$("#user_name").val()
+d3.xhr("http://0.0.0.0:8000/profile_trend?user_name=rl2689", function(nations) {
+//d3.xhr("http://0.0.0.0:8080/nations.json", function(nations) {
 //d3.json("nations.json", function(nations) {
 
 nations=JSON.parse(nations.responseText);
@@ -455,7 +470,7 @@ nations=JSON.parse(nations.responseText);
   var dot = svg.append("g")
       .attr("class", "dots")
     .selectAll(".dot")
-      .data(interpolateData(1800))
+      .data(interpolateData(0))
     .enter().append("circle")
       .attr("class", "dot")
       .style("fill", function(d) { return colorScale(color(d)); })
@@ -479,16 +494,19 @@ nations=JSON.parse(nations.responseText);
 
   // Start a transition that interpolates the data based on year.
   svg.transition()
-      .duration(30000)
+      .duration(10000)
       .ease("linear")
       .tween("year", tweenYear)
       .each("end", enableInteraction);
 
   // Positions the dots based on data.
   function position(dot) {
-    dot .attr("cx", function(d) { return xScale(x(d)); })
-        .attr("cy", function(d) { return yScale(y(d)); })
-        .attr("r", function(d) { return radiusScale(radius(d)); });
+    dot .attr("cx", function(d) { return xScale(x(d));
+     })
+        .attr("cy", function(d) { return yScale(y(d));
+         })
+        .attr("r", function(d) { return radiusScale(radius(d));
+         });
   }
 
   // Defines a sort order so that the smallest dots are drawn on top.
@@ -499,7 +517,7 @@ nations=JSON.parse(nations.responseText);
   // After the transition finishes, you can mouseover to change the year.
   function enableInteraction() {
     var yearScale = d3.scale.linear()
-        .domain([1800, 2009])
+        .domain([0,60])
         .range([box.x + 10, box.x + box.width - 10])
         .clamp(true);
 
@@ -528,12 +546,13 @@ nations=JSON.parse(nations.responseText);
   // Tweens the entire chart by first tweening the year, and then the data.
   // For the interpolated data, the dots and label are redrawn.
   function tweenYear() {
-    var year = d3.interpolateNumber(1800, 2009);
+    var year = d3.interpolateNumber(0, 60);
     return function(t) { displayYear(year(t)); };
   }
 
   // Updates the display to show the specified year.
   function displayYear(year) {
+
     dot.data(interpolateData(year), key).call(position).sort(order);
     label.text(Math.round(year));
   }
@@ -553,26 +572,21 @@ nations=JSON.parse(nations.responseText);
 
   // Finds (and possibly interpolates) the value for the specified year.
   function interpolateValues(values, year) {
+    //console.log(values)
+      //console.log(year)
     var i = bisect.left(values, year, 0, values.length - 1),
+
         a = values[i];
     if (i > 0) {
       var b = values[i - 1],
           t = (year - a[0]) / (b[0] - a[0]);
       return a[1] * (1 - t) + b[1] * t;
     }
+
+      //console.log("obj:"+a[1])
     return a[1];
   }
 });
-
-
-
-
-
-
-
-
-
-
 
 </script>
 </html>                                		

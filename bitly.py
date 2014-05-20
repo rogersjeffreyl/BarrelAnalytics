@@ -8,11 +8,12 @@ access_token = 'fd746325fece9ef4576a98438baf41f9d68480e9'
 def search(args):
     
     data = {}
+
     data['access_token'] = access_token
     data['query'] = args['query']
     data['cities'] = args['location']
     data['fields'] = 'title,description,aggregate_link,last_indexed_epoch'  #Change made here ROHAN
-    data['limit'] = 30
+    data['limit'] = 10
     
     get_params = urllib.urlencode(data)
 
@@ -92,7 +93,7 @@ def click_rate(args):
     data['link'] = args['url']
     data['rollup'] = 'false'
     data['unit'] = 'minute'
-    data['units'] = 15
+    data['units'] = 60
 
     get_params = urllib.urlencode(data)
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from barrel.models import UserForm, BUser, Link
+from barrel.models import UserForm, BUser, Link,LinkData
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -158,3 +158,24 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+@login_required
+def get_profile_trend(request):
+
+    print "UNAMEl"
+
+    links=Link.objects.filter(buser__buser_name=request.GET['user_name'])
+    total_data=[]
+    print links
+    for link in links:
+        link_data=LinkData.objects.all().filter(url=link.url).order_by('-time')
+        click_values=[]
+        social_score=[]
+
+        for data in link_data:
+            click_values.append([data.time.minute,data.click_rate])
+            social_score.append([data.time.minute,data.click_rate])
+        per_link_data={"name":link.url,"region":link.url,"population":click_values,"income":social_score,"lifeExpectancy":click_values}
+        total_data.append(per_link_data)
+    print total_data
+    return HttpResponse(json.dumps(total_data), mimetype='application/javascript')

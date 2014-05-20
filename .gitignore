@@ -1,3 +1,7 @@
 .elasticbeanstalk/
 db.db
 *.pyc
+.DS_Store
+barrel/nations.json
+barrel/static/nations.json
+barrel_proj/nations.json

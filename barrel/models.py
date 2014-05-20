@@ -25,3 +25,11 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('username', 'password')
 
+class LinkData(models.Model):
+
+    url = models.URLField()
+    time = models.DateTimeField(auto_now_add=True)
+    click_rate = models.FloatField()
+    social_score = models.FloatField()
+    def __unicode__(self):
+        return self.url
