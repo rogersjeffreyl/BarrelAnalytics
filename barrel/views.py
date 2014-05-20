@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 import bitly
 import json
-
+from random import  randint
 def home(request):
 
     response_burst = bitly.burst()
@@ -96,13 +96,13 @@ def show_clicks_true(request):
 
     c=bitly.clicks_true(args)
 
-    print c
+
 
     return HttpResponse(json.dumps(c), mimetype='application/javascript')
 
 def show_locations(request):
     args = {'url' : request.POST['link']}
-    print args
+
     c = bitly.locations(args)
 
     print c
@@ -111,7 +111,7 @@ def show_locations(request):
             
 def show_referrers(request):
     args= {'url':request.POST['link']}
-    print args
+
     c = bitly.referrers(args)
 
     print c
@@ -177,11 +177,11 @@ def user_logout(request):
 @login_required
 def get_profile_trend(request):
 
-    print "UNAMEl"
+
 
     links=Link.objects.filter(buser__buser_name=request.GET['user_name'])
     total_data=[]
-    print links
+
     for link in links:
         link_data=LinkData.objects.all().filter(url=link.url).order_by('-time')
         click_values=[]
@@ -194,3 +194,5 @@ def get_profile_trend(request):
         total_data.append(per_link_data)
     print total_data
     return HttpResponse(json.dumps(total_data), mimetype='application/javascript')
+
+

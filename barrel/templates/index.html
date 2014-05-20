@@ -130,6 +130,8 @@
 
       });
 </script>
+
+
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -431,6 +433,7 @@ a.boxclose{
 </head>
 <body>
     {% load timetags %}
+    {% load random_number %}
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -498,7 +501,8 @@ a.boxclose{
       {% endif %}
 
       {% if show_search_response %} 
-      {% if response_found %} 
+      {% if response_found %}
+
       {% for res in response_search.data.results %}
       {% if user.is_authenticated %}
       <div class="save-link-button">
@@ -509,9 +513,15 @@ a.boxclose{
       </div>
  
     {% endif %}
+      {% random_number as my_id %}
 
-      <div class="panel panel-primary">
+      {% if forloop.counter <=  my_id  %}
+      <div class="panel panel-success">
+      {% else %}
+      <div class ="panel panel-danger">
+        {% endif %}
         <div class="panel-heading response-title">
+
             <p class="popper" id="{{ res.aggregate_link }}" data-popbox="pop1" onmouseover="display_popup('{{ res.aggregate_link }}')"> {{ res.title }} </p>
             <div id="pop1" class="popbox">
               <table class="table table-striped">
@@ -631,7 +641,8 @@ var label = svg.append("text")
 
 //d3.xhr.header('user_name',$("#user_name").val())
 var user_name=$("#user_name").val()
-d3.xhr("http://0.0.0.0:8000/profile_trend?user_name=rl2689", function(nations) {
+var url="/profile_trend?user_name="+user_name
+d3.xhr(url, function(nations) {
 //d3.xhr("http://0.0.0.0:8080/nations.json", function(nations) {
 
 nations=JSON.parse(nations.responseText);
