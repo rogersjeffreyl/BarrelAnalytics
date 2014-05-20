@@ -9,6 +9,63 @@
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script> 
 <script type="text/javascript" src='http://code.jquery.com/jquery-1.8.2.js'></script>
 <script type="text/javascript">
+      var moveLeft = 0;
+      var moveDown = 0;
+      $(document).ready(function(){
+        
+        $(".popper").hover(function(){
+
+          var target = '#' + ($(this).attr('data-popbox'));
+          $(target).show();
+          moveLeft = $(this).outerWidth();
+          moveDown = ($(target).outerHeight() / 2);
+          //$("p").css("background-color","yellow");
+
+
+          },function(){
+            var target = '#' + ($(this).attr('data-popbox'));
+            if (!($("a.popper").hasClass("show"))) {
+              $(target).hide();
+            }
+          //$("p").css("background-color","pink");
+        });
+        $(".popper").mousemove(function (e) {
+            var target = '#' + ($(this).attr('data-popbox'));
+
+            leftD = e.pageX + parseInt(moveLeft);
+            maxRight = $(target).outerWidth();
+            windowLeft = $(window).width() - 40;
+            windowRight = 0;
+            maxLeft = e.pageX - (parseInt(moveLeft) + $(target).outerWidth() + 20);
+
+            if (maxRight > windowLeft && maxLeft > windowRight) {
+                leftD = maxLeft;
+            }
+
+            topD = e.pageY - parseInt(moveDown);
+            maxBottom = parseInt(e.pageY + parseInt(moveDown) + 20);
+            windowBottom = parseInt(parseInt($(document).scrollTop()) + parseInt($(window).height()));
+            maxTop = topD;
+            windowTop = parseInt($(document).scrollTop());
+            if (maxBottom > windowBottom) {
+                topD = windowBottom - $(target).outerHeight() - 20;
+            } else if (maxTop < windowTop) {
+                topD = windowTop + 20;
+            }
+
+            $(target).css('top', topD).css('left', (maxLeft+maxRight)/4);
+        });
+        $(".popper").click(function (e) {
+            var target = '#' + ($(this).attr('data-popbox'));
+            if (!($(this).hasClass("show"))) {
+                $(target).show();
+            }
+            $(this).toggleClass("show");
+        });
+
+      });
+</script>
+<script type="text/javascript">
 
   $(document).ready(function() {
     $(".save-button").click(function() {
@@ -110,6 +167,29 @@ function test(e){
   .navbar-right {
     padding-right:15px;
   }
+  .popbox {
+    display: none;
+    position: absolute;
+    z-index: 99999;
+    width: 400px;
+    padding: 10px;
+    background: #EEEFEB;
+    color: #000000;
+    border: 1px solid #4D4F53;
+    margin: 0px;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(164, 164, 164, 1);
+    box-shadow: 0px 0px 5px 0px rgba(164, 164, 164, 1);
+  }
+  .popbox h2 {
+    background-color: #4D4F53;
+    color: #E3E5DD;
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    margin: -10px 0px 8px -10px;
+    padding: 5px 10px;
+  }
+
 </style>
 </head>
 <body>
@@ -181,7 +261,28 @@ function test(e){
     {% endif %}
 
       <div class="panel panel-primary">
-        <div class="panel-heading response-title">{{ res.title }}</div>
+        <div class="panel-heading response-title">
+            <div id="pop1" class="popbox">
+              <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Clicks in last 24 hours</th>
+                        <th>Most Popular Country</th>
+                        <th>Most Popular Referrer</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- TODO: fill table correctly -->
+                      <tr>
+                        <td>1,450</td>
+                        <td>US</td>
+                        <td>Twitter</td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+            <p class="popper" data-popbox="pop1"> {{ res.title }} </p>
+          </div>
         <div class="panel-body">
 	  <span class="response-urls"><a href="{{ res.aggregate_link }}" >{{ res.aggregate_link }}</a></span><span class="glyphicon glyphicon-link"></span><br><br>
           <span class="response-desc">{{ res.description }}</span>
