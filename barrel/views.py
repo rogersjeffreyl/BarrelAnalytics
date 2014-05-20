@@ -91,6 +91,14 @@ def show_clicks(request):
 
     return HttpResponse(json.dumps(c), mimetype='application/javascript')
 
+def show_clicks_true(request):
+    args = {'url' : request.POST['link']}
+
+    c=bitly.clicks_true(args)
+
+    print c
+
+    return HttpResponse(json.dumps(c), mimetype='application/javascript')
 
 def show_locations(request):
     args = {'url' : request.POST['link']}
@@ -101,7 +109,14 @@ def show_locations(request):
 
     return HttpResponse(json.dumps(c), mimetype='application/javascript')
             
+def show_referrers(request):
+    args= {'url':request.POST['link']}
+    print args
+    c = bitly.referrers(args)
 
+    print c
+
+    return HttpResponse(json.dumps(c),mimetype='application/javascript')
 
 def register(request):
     registered = False

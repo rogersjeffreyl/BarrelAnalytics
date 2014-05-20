@@ -56,6 +56,25 @@ def clicks(args):
 
     return data
 
+def clicks_true(args):
+
+    data = {}
+
+    data['access_token']=access_token
+    data['link'] = args['url']
+    data['rollup'] = 'true'
+    data['unit'] = 'hour'
+    data['units'] = 24
+
+    get_params = urllib.urlencode(data)
+
+    endpoint = 'https://api-ssl.bitly.com/v3/link/clicks' + '?' + get_params
+    response = urllib2.urlopen(endpoint)
+    data = json.load(response)
+
+    return data
+
+
 
 def locations(args):
     
@@ -72,6 +91,7 @@ def locations(args):
     data = json.load(response)
 
     return data
+
 def social(args):
 
     data = {}
@@ -86,18 +106,26 @@ def social(args):
 
 def click_rate(args):
 
-    data = {}
+     data={}
+     data['access_token'] = access_token
+     data['link'] = args['url']
+     data['rollup'] = 'false'
+     data['unit'] = 'minute'
+     data['units'] = 15
+     get_params = urllib.urlencode(data)
+     endpoint = 'https://api-ssl.bitly.com/v3/link/clicks' + '?' + get_params
+     response = urllib2.urlopen(endpoint)
+     data = json.load(response)
 
+     return data
+
+def referrers(args):
+
+    data = {}
     data['access_token'] = access_token
     data['link'] = args['url']
-    data['rollup'] = 'false'
-    data['unit'] = 'minute'
-    data['units'] = 15
-
     get_params = urllib.urlencode(data)
-
-    endpoint = 'https://api-ssl.bitly.com/v3/link/clicks' + '?' + get_params
+    endpoint = 'https://api-ssl.bitly.com/v3/link/referrers' + '?' + get_params
     response = urllib2.urlopen(endpoint)
     data = json.load(response)
-
     return data

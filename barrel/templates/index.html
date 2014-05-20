@@ -9,6 +9,128 @@
 <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script> 
 <script type="text/javascript" src='http://code.jquery.com/jquery-1.8.2.js'></script>
 <script type="text/javascript">
+      var moveLeft = 0;
+      var moveDown = 0;
+      function display_popup(id)
+      {
+
+          $.ajax({
+                url : "/show_clicks_true",
+                type : "POST",
+                dataType: "json",
+                data : {
+                    link : id,
+                    csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success : function(json) {
+              var clicks = json.data.link_clicks
+                $('#pop1 table tbody tr:first-child td:first-child').html(clicks)
+
+             //$("#result").append( "Server Response: " + json.server_response);
+             },
+             error : function(xhr,errmsg,err) {
+             alert(xhr.status + ": " + xhr.responseText);
+            }
+        });
+          $.ajax({
+              url :"/show_locations",
+              type : "POST",
+              dataType:"json",
+              data: {
+                  link: id,
+                  csrfmiddlewaretoken: "{{ csrf_token }}"
+              },
+              success: function(json){
+                  var countries = json.data.countries[0].country
+
+                  $('#pop1 table tbody tr:first-child td:first-child + td').html(countries)
+              },
+              error: function(xhr,errmsg,err){
+                  alert(xhr.status+": "+xhr.responseText);
+              }
+          });
+          $.ajax({
+              url :"/show_referrers",
+              type: "POST",
+              dataType: "json",
+              data: {
+                  link: id,
+                  csrfmiddlewaretoken: "{{ csrf_token }}"
+              },
+              success: function(json){
+                  var ref = json.data.referrers[0].referrer
+
+                  $('#pop1 table tbody tr:first-child td:first-child + td + td').html(ref)
+              },
+              error: function(xhr,errmsg,err){
+                  alert(xhr.status+": "+xhr.responseText);
+              }
+          });
+          var target = '#' + ($(this).attr('data-popbox'));
+          $(target).show();
+
+            var target = '#' + ($(this).attr('data-popbox'));
+            if (!($("a.popper").hasClass("show"))) {
+              $(target).hide();
+            }
+      }
+      $(document).ready(function(){
+
+        $(".popper").hover(function(){
+
+          var target = '#' + ($(this).attr('data-popbox'));
+
+          $(target).show();
+          moveLeft = $(this).outerWidth();
+          moveDown = ($(target).outerHeight() / 2);
+          //$("p").css("background-color","yellow");
+
+            return false;
+
+          },function(){
+            var target = '#' + ($(this).attr('data-popbox'));
+            if (!($("a.popper").hasClass("show"))) {
+              $(target).hide();
+            }
+          //$("p").css("background-color","pink");
+        });
+    $(".popper").mouseover(function (e) {
+            var target = '#' + ($(this).attr('data-popbox'));
+
+            leftD = e.pageX + parseInt(moveLeft);
+            maxRight = $(target).outerWidth();
+            windowLeft = $(window).width() - 40;
+            windowRight = 0;
+            maxLeft = e.pageX - (parseInt(moveLeft) + $(target).outerWidth() + 20);
+
+            if (maxRight > windowLeft && maxLeft > windowRight) {
+                leftD = maxLeft;
+            }
+
+            topD = e.pageY - parseInt(moveDown);
+            maxBottom = parseInt(e.pageY + parseInt(moveDown) + 20);
+            windowBottom = parseInt(parseInt($(document).scrollTop()) + parseInt($(window).height()));
+            maxTop = topD;
+            windowTop = parseInt($(document).scrollTop());
+            if (maxBottom > windowBottom) {
+                topD = windowBottom - $(target).outerHeight() - 20;
+            } else if (maxTop < windowTop) {
+                topD = windowTop + 20;
+            }
+
+            $(target).css('top', topD).css('left', (maxLeft+maxRight)/4 + 100);
+        });
+        $(".popper").click(function (e) {
+            var target = '#' + ($(this).attr('data-popbox'));
+            if (!($(this).hasClass("show"))) {
+                $(target).show();
+            }
+            $(this).toggleClass("show");
+        });
+
+      });
+</script>
+<script type="text/javascript">
 
   $(document).ready(function() {
     $(".save-button").click(function() {
@@ -47,7 +169,7 @@ function test(e){
 </script>
 <style type="text/css">
     .top-level{
-    	margin: 50px;
+    	margin-top: 100px;
     }
     .form-level {
         position:relative;
@@ -55,6 +177,90 @@ function test(e){
     }
     .response-level {
         top:10px;
+        width:500px;
+    }
+    .response-title {
+        font-size:14px;
+    }
+    .response-urls {
+      color:gray;
+    }
+    .response-desc {
+        font-size:13px;
+        font-style:italic;
+    }
+    a:link {
+       font-size:12px;
+       color:gray;
+    }
+    .submit-button {
+ 
+    }
+    #brand-0 {
+       font-size:28px;
+       color:gold;
+    }
+    #brand-1 {
+       font-size:20px;
+       color:white;
+    }
+    #no-results {
+       font-size:20px;
+       color:red;
+    }
+    #ticker {
+        left:200px;
+        top:20px;
+        width:200px;
+        height:300px;
+    }
+   #ticker-title {
+     text-align: center;
+     font-size:13px;
+     color:gold;
+    }
+  .save-link-button {
+      position:relative;
+      top: 40px;
+      left:480px;
+  }
+  .navbar-links {
+    font-size:15px;
+  }
+  .navbar-right {
+    padding-right:15px;
+  }
+  .popbox {
+    display: none;
+    position: absolute;
+    z-index: 99999;
+    width: 400px;
+    padding: 10px;
+    background: #EEEFEB;
+    color: #000000;
+    border: 1px solid #4D4F53;
+    margin: 0px;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(164, 164, 164, 1);
+    box-shadow: 0px 0px 5px 0px rgba(164, 164, 164, 1);
+  }
+  .popbox h2 {
+    background-color: #4D4F53;
+    color: #E3E5DD;
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    margin: -10px 0px 8px -10px;
+    padding: 5px 10px;
+  }
+    .top-level{
+    	margin: 50px;
+    }
+    .form-level {
+        position:relative;
+        top:50px;
+    }
+    .response-level {
+        top:40px;
         width:500px;
     }
     .response-title {
@@ -86,23 +292,8 @@ function test(e){
        color:white;
     }
     #no-results {
-       font-size:20px;
+       font-size:40px;
        color:red;
-    }
-    #ticker {
-        left:200px;
-        top:20px;
-        width:200px;
-        height:300px;
-    }
-   #ticker-title {
-     text-align: center;
-     font-size:20px;
-    }
-  .save-link-button {
-      position:relative;
-      top: 40px;
-      left:480px;
   }
   .navbar-links {
     font-size:15px;
@@ -110,56 +301,201 @@ function test(e){
   .navbar-right {
     padding-right:15px;
   }
+  .show-clicks {
+    float: right;
+  }
+  .visual-level {
+      top:100px;
+      height:300px;
+      width:500px;
+     margin-left:500px;
+      position: fixed;
+  }
+  .chart {
+     top:100px;
+      height:600px;
+      width:500px;
+      margin-left:600px;
+      position: fixed;
+   }
+
+text {
+  font: 10px sans-serif;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.label {
+  fill: #777;
+}
+
+.year.label {
+  font: 500 196px "Helvetica Neue";
+  fill: #ddd;
+}
+
+.year.label.active {
+  fill: #aaa;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+  cursor: ew-resize;
+}
+
+.infoBox {
+	border: 1px solid #cccccc;
+	box-shadow: 4px 3px #cccccc;
+	-moz-box-shadow: 4px 3px #cccccc;
+	-webkit-box-shadow: 4px 3px #cccccc;
+	margin-top: 45px;
+}
+    .infoBox h4 {
+	color: #8888888;
+	font-size: 11px;
+	line-height: 11px;
+	margin: -10px 0 0 20px;
+	float: left;
+	text-transform: uppercase;
+	padding: 4px 3px 3px 3px;
+	background-color: #ffffff;
+	border: 1px solid #eeeeee;
+	box-shadow: 2px 2px #e6e6e6;
+	-moz-box-shadow: 2px 2px #e6e6e6;
+	-webkit-box-shadow: 2px 2px #e6e6e6;
+}
+.overlay{
+    background: black;
+    opacity: .5;
+    position:fixed;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    z-index:100;
+}
+.box{
+    position:fixed;
+    top:100px;
+    left:30%;
+    right:30%;
+    background-color:#fff;
+    color:#7F7F7F;
+    padding:20px;
+    border:2px solid #ccc;
+    -moz-border-radius: 20px;
+    -webkit-border-radius:20px;
+    -khtml-border-radius:20px;
+    -moz-box-shadow: 0 1px 5px #333;
+    -webkit-box-shadow: 0 1px 5px #333;
+    z-index:101;
+}
+a.boxclose{
+    float:right;
+    margin-top:10px;
+    margin-right:10px;
+    cursor:pointer;
+    color: #fff;
+    #border: 1px solid #AEAEAE;
+    #border-radius: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    display: inline-block;
+    line-height: 0px;
+    padding: 11px 3px;
+}
+
+.boxclose:before {
+    content: "×";
+
+}
+
+.box h1{
+    border-bottom: 1px dashed #7F7F7F;
+    margin:-20px -20px 0px -20px;
+    padding:10px;
+    background-color:#FFEFEF;
+    color:#EF7777;
+    -moz-border-radius:20px 20px 0px 0px;
+    -webkit-border-top-left-radius: 20px;
+    -webkit-border-top-right-radius: 20px;
+    -khtml-border-top-left-radius: 20px;
+    -khtml-border-top-right-radius: 20px;
+}
+
 </style>
 </head>
 <body>
     {% load timetags %}
-  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="navbar-header">
-      <a href="/" class="navbar-brand"><span id="brand-0">Barrel</span><span id="brand-1">Analytics</span></a>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/" class="navbar-brand"><span id="brand-0">Barrel</span><span id="brand-1">Analytics</span></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          {% if user.is_authenticated %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/dashboard?user_name={{user.username }}"><span class="navbar-links">{{ user.username }}'s Dashboard</span></a> </li>            
+            <li><a href="/logout"><span class="navbar-links">Log Out</span></a></li>
+          </ul>
+          {% else %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/register"><span class="navbar-links">Register</span></a></li>
+            <li><a href="/login"><span class="navbar-links">Login</span></a></li>
+          </ul>
+          {% endif %}
+
+
+          <form name="search_form" class="navbar-form navbar-right" action="/search" method="post">{% csrf_token %}
+                     
+              <button id="submitbutton_id" type="submit" class="navbar-form navbar-right submit-button btn btn-primary"><label class="glyphicon glyphicon-search"></label></button>
+              
+              <input id="phrase_id" type="text" name="query" class="navbar-form navbar-right form-input form-control" placeholder="Phrase, eg Barack Obama">
+             <label class="navbar-form navbar-right glyphicon glyphicon-search"></label>
+             <input type="text" name="location" class="navbar-form navbar-right form-input form-control" placeholder="country initials">
+
+             
+             <label class="navbar-form navbar-right glyphicon glyphicon-globe"></label>
+
+              
+         
+            
+          </form>
+        </div>
+      </div>
+
+        <div class="row">
+            <div class="col-md-1">
+           <span class="glyphicon glyphicon-fire"></span><span id="ticker-title">Burst Feed</span>
+           </div>
+           <div class="col-md-11">
+         <marquee behavior="scroll" align="top" direction="right" scrollamount="2" scrolldelay="5" onmouseover="this.stop()" onmouseout="this.start()" height="25px">
+           {% for res in response_burst.data.phrases %}
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                 <span class="response-urls"><a href="#" class="phrase" value={{ res.phrase }} onclick='test("{{ res.phrase}}")'>  {{ res.phrase }}</a></span>
+           {% endfor %}
+               </marquee>
+             </div>
+
+          </div>
     </div>
-   {% if user.is_authenticated %}
-     <ul class="nav navbar-nav navbar-right">
-           <li><a href="/logout"><span class="navbar-links">Log Out</span></a></li>
-     </ul>
-     <ul class="nav navbar-nav navbar-right">
-           <li><a href="/dashboard?user_name={{user.username }}"><span class="navbar-links">{{ user.username }}'s Dashboard</span></a></li>
-     </ul>
-   {% else %}
-     <ul class="nav navbar-nav navbar-right">
-           <li><a href="/register"><span class="navbar-links">Register</span></a></li>
-     </ul> 
-     <ul class="nav navbar-nav navbar-right">
-           <li><a href="/login"><span class="navbar-links">Login</span></a></li>
-     </ul>
-  {% endif %}
-  </nav>
   <div class="top-level">
-    <div class="form-level col-md-3">
-      <form name="search_form" action="/search" method="post">{% csrf_token %}
-	<div class="input-group">
-	  <label  class="control-label col-xs-2 glyphicon glyphicon-search"></label>
-	  <div class="col-xs-10">
-          <input id="phrase_id" type="text" name="query" class="form-input form-control" placeholder="Phrase, eg Barack Obama">
-	  </div>
-	</div>
-	<br>
-	
-	<div class="input-group">
-          <label class="control-label col-xs-2 glyphicon glyphicon-globe"></label>
-	  <div class="col-xs-10">
-	    <input id="location_id" type="text" name="location" class="form-input form-control" placeholder="location, country or city">
-	  </div>
-	</div>
-	<br>
-	
-	<div class="input-group">
-	  <div class="col-xs-10">
-	    <button id="submitbutton_id" type="submit" class="submit-button btn btn-primary"><label class="glyphicon glyphicon-search"></label> Search</button>
-	  </div>
-	</div>
-      </form>
-    </div>
+
     <div  class="col-md-3 response-level">
 
       {% if user.is_authenticated %}
@@ -180,7 +516,28 @@ function test(e){
     {% endif %}
 
       <div class="panel panel-primary">
-        <div class="panel-heading response-title">{{ res.title }}</div>
+        <div class="panel-heading response-title">
+            <p class="popper" id="{{ res.aggregate_link }}" data-popbox="pop1" onmouseover="display_popup('{{ res.aggregate_link }}')"> {{ res.title }} </p>
+            <div id="pop1" class="popbox">
+              <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Clicks in last 24 hours</th>
+                        <th>Most Popular Country</th>
+                        <th>Most Popular Referrer</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- TODO: fill table correctly -->
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+          </div>
         <div class="panel-body">
 	  <span class="response-urls"><a href="{{ res.aggregate_link }}" >{{ res.aggregate_link }}</a></span><span class="glyphicon glyphicon-link"></span><br><br>
           <span class="response-desc">{{ res.description }}</span>
@@ -199,16 +556,216 @@ function test(e){
       {% endif %}
       {% endif %}
     </div>
-     <div id="ticker"   class="col-md-3">
-         <span class="glyphicon glyphicon-fire"></span><span id="ticker-title"><b>Burst Feed</b></span>
-	 <marquee behavior="scroll" align="center" direction="down" scrollamount="2" scrolldelay="5" onmouseover="this.stop()" onmouseout="this.start()" height="300px" width="200px" bgcolor="#c0c0c0" style="border:1px solid #009900">
-	   {% for res in response_burst.data.phrases %}
-           <span class="response-urls"><a href="#" class="phrase" value={{ res.phrase }} onclick='test("{{ res.phrase}}")'>{{ res.phrase }}</a></span><br><br>
-	   {% endfor %}
-         </marquee>
-     </div>
+  {% if user.is_authenticated %}
+      <div id="chart" class='chart infobox'></div>
+  {% endif %}
   </div>
 
 </body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+// Various accessors that specify the four dimensions of data to visualize.
+function x(d) { return d.income; }
+function y(d) { return d.lifeExpectancy; }
+function radius(d) { return d.population; }
+function color(d) { return d.region; }
+function key(d) { return d.name; }
+
+// Chart dimensions.
+var margin = {top: 21.5, right: 19.5, bottom: 19.5, left: 39.5},
+    width = 600 - margin.right,
+    height = 300 - margin.top - margin.bottom;
+
+// Various scales. These domains make assumptions of data, naturally.
+    console.log(width);
+    var xScale = d3.scale.linear().domain([0, 1000]).range([0,1000 ]),
+    yScale = d3.scale.linear().domain([0, 1000]).range([height, 0]),
+    radiusScale = d3.scale.linear().domain([0,1000]).range([0,150]),
+    colorScale = d3.scale.category10();
+
+// The x & y axes.
+var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(12, d3.format(",d")),
+    yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+// Create the SVG container and set the origin.
+var svg = d3.select("#chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// Add the x-axis.
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+// Add the y-axis.
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+// Add an x-axis label.
+svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height - 6)
+    .text("click-rate");
+
+// Add a y-axis label.
+svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", 6)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("socialscore");
+
+// Add the year label; the value is set on transition.
+var label = svg.append("text")
+    .attr("class", "year label")
+    .attr("text-anchor", "end")
+    .attr("y", height - 24)
+    .attr("x", width)
+    .text(0);
+
+// Load the data.
+
+
+//d3.xhr.header('user_name',$("#user_name").val())
+var user_name=$("#user_name").val()
+d3.xhr("http://0.0.0.0:8000/profile_trend?user_name=rl2689", function(nations) {
+//d3.xhr("http://0.0.0.0:8080/nations.json", function(nations) {
+
+nations=JSON.parse(nations.responseText);
+//alert(nations);
+  // A bisector since many nation's data is sparsely-defined.
+  var bisect = d3.bisector(function(d) { return d[0]; });
+
+  // Add a dot per nation. Initialize the data at 1800, and set the colors.
+  var dot = svg.append("g")
+      .attr("class", "dots")
+    .selectAll(".dot")
+      .data(interpolateData(0))
+    .enter().append("circle")
+      .attr("class", "dot")
+      .style("fill", function(d) { return colorScale(color(d)); })
+      .call(position)
+      .sort(order);
+
+  // Add a title.
+  dot.append("title")
+      .text(function(d) { return d.name; });
+
+  // Add an overlay for the year label.
+  var box = label.node().getBBox();
+
+  var overlay = svg.append("rect")
+        .attr("class", "overlay")
+        .attr("x", box.x)
+        .attr("y", box.y)
+        .attr("width", box.width)
+        .attr("height", box.height)
+        .on("mouseover", enableInteraction);
+
+  // Start a transition that interpolates the data based on year.
+  svg.transition()
+      .duration(10000)
+      .ease("linear")
+      .tween("year", tweenYear)
+      .each("end", enableInteraction);
+
+  // Positions the dots based on data.
+  function position(dot) {
+    dot .attr("cx", function(d) { return xScale(x(d));
+     })
+        .attr("cy", function(d) { return yScale(y(d));
+         })
+        .attr("r", function(d) { return radiusScale(radius(d));
+         });
+  }
+
+  // Defines a sort order so that the smallest dots are drawn on top.
+  function order(a, b) {
+    return radius(b) - radius(a);
+  }
+
+  // After the transition finishes, you can mouseover to change the year.
+  function enableInteraction() {
+    var yearScale = d3.scale.linear()
+        .domain([0,60])
+        .range([box.x + 10, box.x + box.width - 10])
+        .clamp(true);
+
+    // Cancel the current transition, if any.
+    svg.transition().duration(0);
+
+    overlay
+        .on("mouseover", mouseover)
+        .on("mouseout", mouseout)
+        .on("mousemove", mousemove)
+        .on("touchmove", mousemove);
+
+    function mouseover() {
+      label.classed("active", true);
+    }
+
+    function mouseout() {
+      label.classed("active", false);
+    }
+
+    function mousemove() {
+      displayYear(yearScale.invert(d3.mouse(this)[0]));
+    }
+  }
+
+  // Tweens the entire chart by first tweening the year, and then the data.
+  // For the interpolated data, the dots and label are redrawn.
+  function tweenYear() {
+    var year = d3.interpolateNumber(0, 60);
+    return function(t) { displayYear(year(t)); };
+  }
+
+  // Updates the display to show the specified year.
+  function displayYear(year) {
+
+    dot.data(interpolateData(year), key).call(position).sort(order);
+    label.text(Math.round(year));
+  }
+
+  // Interpolates the dataset for the given (fractional) year.
+  function interpolateData(year) {
+    return nations.map(function(d) {
+      return {
+        name: d.name,
+        region: d.region,
+        income: interpolateValues(d.income, year),
+        population: interpolateValues(d.population, year),
+        lifeExpectancy: interpolateValues(d.lifeExpectancy, year)
+      };
+    });
+  }
+
+  // Finds (and possibly interpolates) the value for the specified year.
+  function interpolateValues(values, year) {
+    //console.log(values)
+      //console.log(year)
+    var i = bisect.left(values, year, 0, values.length - 1),
+
+        a = values[i];
+    if (i > 0) {
+      var b = values[i - 1],
+          t = (year - a[0]) / (b[0] - a[0]);
+      return a[1] * (1 - t) + b[1] * t;
+    }
+
+      //console.log("obj:"+a[1])
+    return a[1];
+  }
+});
+
+</script>
 </html>                                		
 
