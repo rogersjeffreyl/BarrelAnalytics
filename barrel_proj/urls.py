@@ -12,12 +12,12 @@ urlpatterns = patterns('',
     url(r'^rm_link/?', 'barrel.views.rm_link'),
     url(r'^register/?', 'barrel.views.register'),
     url(r'^dashboard/?', 'barrel.views.dashboard'),
+    url(r'^show_clicks_true/?','barrel.views.show_clicks_true'),
     url(r'^show_clicks/?', 'barrel.views.show_clicks'),
     url(r'^show_locations/?', 'barrel.views.show_locations'),
     url(r'^login/?', 'barrel.views.user_login'),
     url(r'^logout/?', 'barrel.views.user_logout'),
-    url(r'^show_referrers/?','barrel.views.show_referrers'),
-    url(r'^show_clicks_true/?','barrel.views.')
+    url(r'^show_referrers/?','barrel.views.show_referrers')
     # url(r'^$', 'mysite.views.home', name='home'),
     # url(r'^mysite/', include('mysite.foo.urls')),
 

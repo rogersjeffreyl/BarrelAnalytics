@@ -169,7 +169,7 @@ function test(e){
 </script>
 <style type="text/css">
     .top-level{
-    	margin: 50px;
+    	margin-top: 80px;
     }
     .form-level {
         position:relative;
@@ -194,10 +194,7 @@ function test(e){
        color:gray;
     }
     .submit-button {
-        position:relative;
-        top:20px;
-        left:25px;
-        width: 170px;
+ 
     }
     #brand-0 {
        font-size:28px;
@@ -219,7 +216,8 @@ function test(e){
     }
    #ticker-title {
      text-align: center;
-     font-size:20px;
+     font-size:13px;
+     color:gold;
     }
   .save-link-button {
       position:relative;
@@ -259,53 +257,66 @@ function test(e){
 </head>
 <body>
     {% load timetags %}
-  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="navbar-header">
-      <a href="/" class="navbar-brand"><span id="brand-0">Barrel</span><span id="brand-1">Analytics</span></a>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/" class="navbar-brand"><span id="brand-0">Barrel</span><span id="brand-1">Analytics</span></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          {% if user.is_authenticated %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/dashboard?user_name={{user.username }}"><span class="navbar-links">{{ user.username }}'s Dashboard</span></a> </li>            
+            <li><a href="/logout"><span class="navbar-links">Log Out</span></a></li>
+          </ul>
+          {% else %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/register"><span class="navbar-links">Register</span></a></li>
+            <li><a href="/login"><span class="navbar-links">Login</span></a></li>
+          </ul>
+          {% endif %}
+
+
+          <form name="search_form" class="navbar-form navbar-right" action="/search" method="post">{% csrf_token %}
+                     
+              <button id="submitbutton_id" type="submit" class="navbar-form navbar-right submit-button btn btn-primary"><label class="glyphicon glyphicon-search"></label></button>
+              
+              <input id="phrase_id" type="text" name="query" class="navbar-form navbar-right form-input form-control" placeholder="Phrase, eg Barack Obama">
+             <label class="navbar-form navbar-right glyphicon glyphicon-search"></label>
+             <input type="text" name="location" class="navbar-form navbar-right form-input form-control" placeholder="country initials">
+
+             
+             <label class="navbar-form navbar-right glyphicon glyphicon-globe"></label>
+
+              
+         
+            
+          </form>
+        </div>
+      </div>
+
+        <div class="row">
+            <div class="col-md-1">
+           <span class="glyphicon glyphicon-fire"></span><span id="ticker-title">Burst Feed</span>
+           </div>
+           <div class="col-md-11">
+         <marquee behavior="scroll" align="top" direction="right" scrollamount="2" scrolldelay="5" onmouseover="this.stop()" onmouseout="this.start()" height="25px">
+           {% for res in response_burst.data.phrases %}
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                 <span class="response-urls"><a href="#" class="phrase" value={{ res.phrase }} onclick='test("{{ res.phrase}}")'>  {{ res.phrase }}</a></span>
+           {% endfor %}
+               </marquee>
+             </div>
+
+          </div>
     </div>
-   {% if user.is_authenticated %}
-     <ul class="nav navbar-nav navbar-right">
-           <li><a href="/logout"><span class="navbar-links">Log Out</span></a></li>
-     </ul>
-     <ul class="nav navbar-nav navbar-right">
-           <li><a href="/dashboard?user_name={{user.username }}"><span class="navbar-links">{{ user.username }}'s Dashboard</span></a></li>
-     </ul>
-   {% else %}
-     <ul class="nav navbar-nav navbar-right">
-           <li><a href="/register"><span class="navbar-links">Register</span></a></li>
-     </ul> 
-     <ul class="nav navbar-nav nav
-     bar-right">
-           <li><a href="/login"><span class="navbar-links">Login</span></a></li>
-     </ul>
-  {% endif %}
-  </nav>
   <div class="top-level">
-    <div class="form-level col-md-3">
-      <form name="search_form" action="/search" method="post">{% csrf_token %}
-	<div class="input-group">
-	  <label  class="control-label col-xs-2 glyphicon glyphicon-search"></label>
-	  <div class="col-xs-10">
-          <input id="phrase_id" type="text" name="query" class="form-input form-control" placeholder="Phrase, eg Barack Obama">
-	  </div>
-	</div>
-	<br>
-	
-	<div class="input-group">
-          <label class="control-label col-xs-2 glyphicon glyphicon-globe"></label>
-	  <div class="col-xs-10">
-	    <input id="location_id" type="text" name="location" class="form-input form-control" placeholder="location, country or city">
-	  </div>
-	</div>
-	<br>
-	
-	<div class="input-group">
-	  <div class="col-xs-10">
-	    <button id="submitbutton_id" type="submit" class="submit-button btn btn-primary"><label class="glyphicon glyphicon-search"></label> Search</button>
-	  </div>
-	</div>
-      </form>
-    </div>
+
     <div  class="col-md-3 response-level">
 
       {% if user.is_authenticated %}
@@ -366,14 +377,7 @@ function test(e){
       {% endif %}
       {% endif %}
     </div>
-     <div id="ticker"   class="col-md-3">
-         <span class="glyphicon glyphicon-fire"></span><span id="ticker-title"><b>Burst Feed</b></span>
-	 <marquee behavior="scroll" align="center" direction="down" scrollamount="2" scrolldelay="5" onmouseover="this.stop()" onmouseout="this.start()" height="300px" width="200px" bgcolor="#c0c0c0" style="border:1px solid #009900">
-	   {% for res in response_burst.data.phrases %}
-           <span class="response-urls"><a href="#" class="phrase" value={{ res.phrase }} onclick='test("{{ res.phrase}}")'>{{ res.phrase }}</a></span><br><br>
-	   {% endfor %}
-         </marquee>
-     </div>
+
   </div>
 
 </body>
