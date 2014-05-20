@@ -9,4 +9,4 @@ def random_number(length=2):
     For a length of 3 it will be between 100 and 999.
     For a length of 4 it will be between 1000 and 9999.
     """
-    return randint(10**(length-1), 15**(length-1))
+    return randint(10**(length-1), 25**(length-1))
