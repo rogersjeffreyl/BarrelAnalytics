@@ -19,7 +19,7 @@ def search(args):
     endpoint = 'https://api-ssl.bitly.com/v3/search' + '?' + get_params
     response = urllib2.urlopen(endpoint)
     data = json.load(response)
-    print data
+
     return data
 
 
